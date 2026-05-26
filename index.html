@@ -66,7 +66,6 @@
     .logo-texto span:first-child {
       font-size: 18px;
       font-weight: 900;
-      color: var(--blanco);
       letter-spacing: 2px;
     }
 
@@ -765,7 +764,62 @@
       right: 0;
       height: 6px;
       background: linear-gradient(90deg, var(--carbon) 0%, var(--rojo) 50%, var(--carbon) 100%);
+      animation: barraEntrada 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
+
+    /* ── MOTION GRAPHICS — Header animations ── */
+
+    @keyframes logoSlideIn {
+      from { transform: translateX(-32px); opacity: 0; }
+      to   { transform: translateX(0);     opacity: 1; }
+    }
+
+    @keyframes navSlideDown {
+      from { transform: translateY(-16px); opacity: 0; }
+      to   { transform: translateY(0);     opacity: 1; }
+    }
+
+    @keyframes barraEntrada {
+      from { transform: scaleX(0); transform-origin: left; }
+      to   { transform: scaleX(1); transform-origin: left; }
+    }
+
+    @keyframes shimmerGRP {
+      0%   { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    @keyframes logoImgPulse {
+      0%   { filter: brightness(1); }
+      50%  { filter: brightness(1.25) drop-shadow(0 0 8px rgba(204,16,16,0.6)); }
+      100% { filter: brightness(1); }
+    }
+
+    .logo {
+      animation: logoSlideIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+    }
+
+    .logo img {
+      animation: logoImgPulse 2.8s ease-in-out 0.8s 1;
+    }
+
+    .logo-texto span:first-child {
+      background: linear-gradient(90deg,
+        var(--blanco) 0%,
+        var(--blanco) 35%,
+        rgba(255,255,255,0.55) 50%,
+        var(--blanco) 65%,
+        var(--blanco) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmerGRP 1.8s linear 0.5s 1 forwards;
+    }
+
+    nav button:nth-child(1) { animation: navSlideDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both; }
+    nav button:nth-child(2) { animation: navSlideDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both; }
+    nav button:nth-child(3) { animation: navSlideDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both; }
 
     /* ── Responsivo ── */
     @media (max-width: 768px) {
