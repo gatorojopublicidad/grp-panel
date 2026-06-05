@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kit de Prospección Web — Gato Rojo Publicidad</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rojo: #ED1C24;
+    --gris: #575756;
+    --negro: #0D0D0D;
+    --blanco: #FFFFFF;
+    --rojo-dark: #C0151B;
+    --rojo-soft: rgba(237,28,36,0.08);
+    --gris-claro: #F5F5F5;
+    --gris-medio: #E0E0E0;
+    --texto: #1a1a1a;
+    --texto-suave: #666;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--negro);
+    color: var(--blanco);
+    line-height: 1.6;
+  }
+
+  /* ── PORTADA ── */
+  .cover {
+    background: var(--negro);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 60px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -200px;
+    right: -200px;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    border: 2px solid rgba(237,28,36,0.15);
+  }
+
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    right: 100px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    border: 1px solid rgba(237,28,36,0.08);
+  }
+
+  .cover-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--rojo);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .cover-eyebrow::before {
+    content: '';
+    width: 32px;
+    height: 2px;
+    background: var(--rojo);
+  }
+
+  .cover-title {
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+    max-width: 700px;
+  }
+
+  .cover-title .highlight {
+    color: var(--rojo);
+    display: block;
+  }
+
+  .cover-subtitle {
+    font-size: 16px;
+    color: #888;
+    font-weight: 500;
+    max-width: 500px;
+    margin-bottom: 48px;
+    line-height: 1.7;
+  }
+
+  .cover-tags {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .cover-tag {
+    background: rgba(237,28,36,0.12);
+    border: 1px solid rgba(237,28,36,0.3);
+    color: var(--rojo);
+    padding: 6px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .cover-brand {
+    position: absolute;
+    bottom: 40px;
+    right: 80px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #444;
+  }
+
+  .cover-brand span { color: var(--rojo); }
+
+  /* ── NAV ── */
+  .toc {
+    background: #111;
+    padding: 60px 80px;
+    border-top: 1px solid #1e1e1e;
+    border-bottom: 3px solid var(--rojo);
+  }
+
+  .toc-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--rojo);
+    margin-bottom: 28px;
+  }
+
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .toc-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    padding: 12px;
+    border: 1px solid #222;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .toc-item:hover { border-color: var(--rojo); background: var(--rojo-soft); }
+
+  .toc-num {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--rojo);
+    line-height: 1;
+    opacity: 0.4;
+    flex-shrink: 0;
+  }
+
+  .toc-text {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #ccc;
+  }
+
+  /* ── SECCIONES ── */
+  .section {
+    padding: 80px;
+    border-bottom: 1px solid #1a1a1a;
+  }
+
+  .section:nth-child(even) { background: #0a0a0a; }
+  .section:nth-child(odd) { background: var(--negro); }
+
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 48px;
+  }
+
+  .section-num {
+    font-size: 80px;
+    font-weight: 900;
+    color: var(--rojo);
+    line-height: 0.85;
+    opacity: 0.18;
+    flex-shrink: 0;
+    letter-spacing: -0.04em;
+  }
+
+  .section-meta { flex: 1; }
+
+  .section-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--rojo);
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── CARDS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+
+  .card {
+    background: #141414;
+    border: 1px solid #222;
+    border-top: 3px solid var(--rojo);
+    padding: 24px;
+  }
+
+  .card-icon {
+    font-size: 28px;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .card-body {
+    font-size: 12px;
+    color: #999;
+    line-height: 1.7;
+  }
+
+  .card-body strong { color: var(--blanco); }
+
+  /* ── STEPS ── */
+  .steps { display: flex; flex-direction: column; gap: 0; }
+
+  .step {
+    display: flex;
+    gap: 24px;
+    padding: 28px 0;
+    border-bottom: 1px solid #1e1e1e;
+    position: relative;
+  }
+
+  .step:last-child { border-bottom: none; }
+
+  .step-num {
+    width: 44px;
+    height: 44px;
+    background: var(--rojo);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 900;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .step-content { flex: 1; }
+
+  .step-title {
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .step-body {
+    font-size: 13px;
+    color: #999;
+    line-height: 1.7;
+  }
+
+  .step-body strong { color: var(--blanco); }
+
+  .step-body code {
+    background: #1e1e1e;
+    border: 1px solid #333;
+    color: var(--rojo);
+    padding: 2px 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+  }
+
+  .step-tip {
+    background: rgba(237,28,36,0.07);
+    border-left: 3px solid var(--rojo);
+    padding: 10px 14px;
+    margin-top: 12px;
+    font-size: 12px;
+    color: #bbb;
+    font-style: italic;
+  }
+
+  /* ── TABLA ── */
+  .sector-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 8px;
+  }
+
+  .sector-table th {
+    background: var(--rojo);
+    color: var(--blanco);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .sector-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #1e1e1e;
+    vertical-align: top;
+    color: #ccc;
+    line-height: 1.5;
+  }
+
+  .sector-table tr:hover td { background: #141414; }
+
+  .badge-hot {
+    background: rgba(237,28,36,0.2);
+    border: 1px solid rgba(237,28,36,0.4);
+    color: #ff5a60;
+    padding: 2px 8px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .badge-med {
+    background: rgba(255,160,0,0.15);
+    border: 1px solid rgba(255,160,0,0.3);
+    color: #ffb020;
+    padding: 2px 8px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ── EMAIL BOXES ── */
+  .email-block {
+    background: #0f0f0f;
+    border: 1px solid #222;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+
+  .email-header {
+    background: #1a1a1a;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--rojo);
+  }
+
+  .email-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--rojo);
+  }
+
+  .email-tags {
+    display: flex;
+    gap: 6px;
+  }
+
+  .etag {
+    background: #222;
+    color: #777;
+    padding: 2px 8px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: 1px solid #333;
+  }
+
+  .email-meta {
+    padding: 16px 24px;
+    border-bottom: 1px solid #1e1e1e;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .email-field {
+    display: flex;
+    gap: 10px;
+    font-size: 12px;
+  }
+
+  .email-field-label {
+    color: #555;
+    font-weight: 700;
+    min-width: 70px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding-top: 1px;
+  }
+
+  .email-field-val {
+    color: #ddd;
+    line-height: 1.5;
+  }
+
+  .email-field-val.asunto {
+    color: var(--blanco);
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .email-body {
+    padding: 24px;
+    font-size: 13px;
+    color: #c0c0c0;
+    line-height: 1.85;
+    white-space: pre-wrap;
+  }
+
+  .email-body .resaltar {
+    color: var(--blanco);
+    font-weight: 700;
+  }
+
+  .email-body .trig {
+    color: #ffb020;
+    font-style: italic;
+  }
+
+  .email-annotation {
+    background: #0a0a0a;
+    border-top: 1px solid #1e1e1e;
+    padding: 14px 24px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .ann-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    color: #555;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .ann-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── CHECKLIST ── */
+  .checklist { display: flex; flex-direction: column; gap: 0; }
+
+  .check-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 14px 0;
+    border-bottom: 1px solid #1a1a1a;
+  }
+
+  .check-item:last-child { border-bottom: none; }
+
+  .check-box {
+    width: 22px;
+    height: 22px;
+    border: 2px solid #333;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .check-text {
+    font-size: 13px;
+    color: #bbb;
+    line-height: 1.5;
+  }
+
+  .check-text strong { color: var(--blanco); }
+
+  /* ── HIGHLIGHT BOX ── */
+  .highlight-box {
+    background: rgba(237,28,36,0.06);
+    border: 1px solid rgba(237,28,36,0.2);
+    border-left: 4px solid var(--rojo);
+    padding: 20px 24px;
+    margin: 24px 0;
+    font-size: 13px;
+    color: #ccc;
+    line-height: 1.7;
+  }
+
+  .highlight-box strong { color: var(--blanco); }
+
+  .highlight-box .big {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--rojo);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  /* ── WHATSAPP SCRIPT ── */
+  .wa-bubble {
+    background: #128C7E;
+    border-radius: 18px 18px 18px 4px;
+    padding: 16px 20px;
+    font-size: 13px;
+    color: var(--blanco);
+    line-height: 1.7;
+    max-width: 500px;
+    margin: 16px 0;
+    white-space: pre-wrap;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #0a0a0a;
+    border-top: 3px solid var(--rojo);
+    padding: 40px 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .footer-brand {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .footer-brand span { color: var(--rojo); }
+
+  .footer-note {
+    font-size: 11px;
+    color: #444;
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 768px) {
+    .cover, .toc, .section, footer { padding: 40px 24px; }
+    .section-num { font-size: 50px; }
+    .email-annotation { flex-direction: column; gap: 8px; }
+  }
+
+  /* Print button */
+  .print-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--rojo);
+    color: var(--blanco);
+    border: none;
+    padding: 12px 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    z-index: 999;
+    transition: background 0.2s;
+    box-shadow: 0 4px 20px rgba(237,28,36,0.4);
+  }
+
+  .print-btn:hover { background: var(--rojo-dark); }
+
+  @media print {
+    .print-btn { display: none; }
+    body { background: white; color: black; }
+  }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">⬇ Guardar PDF</button>
+
+<!-- PORTADA -->
+<div class="cover">
+  <div class="cover-eyebrow">Gato Rojo Publicidad · Kit de ventas</div>
+  <h1 class="cover-title">
+    Cómo conseguir
+    <span class="highlight">prospectos web</span>
+    en Colombia
+  </h1>
+  <p class="cover-subtitle">Guía paso a paso para encontrar empresas sin web o con web obsoleta, más 3 plantillas de email con neuromarketing listas para enviar.</p>
+  <div class="cover-tags">
+    <span class="cover-tag">Google Maps</span>
+    <span class="cover-tag">datos.gov.co</span>
+    <span class="cover-tag">Emails listos</span>
+    <span class="cover-tag">WhatsApp script</span>
+    <span class="cover-tag">Neuromarketing aplicado</span>
+  </div>
+  <div class="cover-brand"><span>GATO ROJO</span> PUBLICIDAD</div>
+</div>
+
+<!-- ÍNDICE -->
+<div class="toc">
+  <div class="toc-title">Contenido</div>
+  <div class="toc-grid">
+    <a href="#s1" class="toc-item">
+      <div class="toc-num">1</div>
+      <div class="toc-text">Los 5 sectores más rentables para prospectar</div>
+    </a>
+    <a href="#s2" class="toc-item">
+      <div class="toc-num">2</div>
+      <div class="toc-text">Guía Google Maps: encontrar negocios sin web</div>
+    </a>
+    <a href="#s3" class="toc-item">
+      <div class="toc-num">3</div>
+      <div class="toc-text">datos.gov.co: base de datos gratuita y legal</div>
+    </a>
+    <a href="#s4" class="toc-item">
+      <div class="toc-num">4</div>
+      <div class="toc-text">3 emails con neuromarketing listos para enviar</div>
+    </a>
+    <a href="#s5" class="toc-item">
+      <div class="toc-num">5</div>
+      <div class="toc-text">Script de WhatsApp y seguimiento</div>
+    </a>
+    <a href="#s6" class="toc-item">
+      <div class="toc-num">6</div>
+      <div class="toc-text">Checklist diario de prospección</div>
+    </a>
+  </div>
+</div>
+
+<!-- SECCIÓN 1 -->
+<div class="section" id="s1">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <div class="section-meta">
+      <div class="section-eyebrow">Dónde está el dinero</div>
+      <h2 class="section-title">Los 5 sectores con más empresas sin web actualizada en Colombia</h2>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <span class="big">+70% de las pymes colombianas</span>
+    no tiene página web o tiene una creada antes de 2018. En estos 5 sectores, la oportunidad es mayor porque el decisor tiene presupuesto Y siente que le falta algo.
+  </div>
+
+  <table class="sector-table">
+    <thead>
+      <tr>
+        <th>Sector</th>
+        <th>Por qué son buenos prospectos</th>
+        <th>Señal de oportunidad</th>
+        <th>Prioridad</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong style="color:#fff">Construcción & Inmobiliario</strong></td>
+        <td>Alta facturación, presupuesto disponible. Muchas constructoras medianas tienen solo Facebook o nada.</td>
+        <td>Solo Google Maps sin URL, o web con Flash/tablas HTML</td>
+        <td><span class="badge-hot">🔥 Alta</span></td>
+      </tr>
+      <tr>
+        <td><strong style="color:#fff">Talleres mecánicos & Autopartes</strong></td>
+        <td>Decenas de miles en todo el país. El 90% solo opera por voz a voz. El dueño es el decisor directo.</td>
+        <td>Solo WhatsApp Business como "sitio web"</td>
+        <td><span class="badge-hot">🔥 Alta</span></td>
+      </tr>
+      <tr>
+        <td><strong style="color:#fff">Servicios jurídicos & Contables</strong></td>
+        <td>Negocios de imagen y reputación. Una web profesional los diferencia radicalmente. Precio no es objeción.</td>
+        <td>Web sin SSL (http://), sin versión móvil, diseño año 2010</td>
+        <td><span class="badge-hot">🔥 Alta</span></td>
+      </tr>
+      <tr>
+        <td><strong style="color:#fff">Salud (Consultorios, Clínicas pequeñas, Odontología)</strong></td>
+        <td>Buscan pacientes constantemente. Una web con citas online es venta directa para ellos.</td>
+        <td>Perfil Google con teléfono pero sin web. Muchas reseñas = negocio activo</td>
+        <td><span class="badge-hot">🔥 Alta</span></td>
+      </tr>
+      <tr>
+        <td><strong style="color:#fff">Educación (Institutos, Academias, Colegios privados)</strong></td>
+        <td>Matrícula anual depende de que los encuentren en Google. Muchos solo tienen Facebook desactualizado.</td>
+        <td>Solo fanpage sin web vinculada, o dominio .blogspot.com</td>
+        <td><span class="badge-med">Media</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SECCIÓN 2 -->
+<div class="section" id="s2">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <div class="section-meta">
+      <div class="section-eyebrow">La herramienta gratuita más poderosa</div>
+      <h2 class="section-title">Cómo usar Google Maps para encontrar 50 prospectos en 2 horas</h2>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Abre Google Maps y busca por sector + ciudad</div>
+        <div class="step-body">
+          Ve a <strong>maps.google.com</strong> y escribe en el buscador:<br><br>
+          <code>talleres mecánicos Bogotá</code> &nbsp;/&nbsp; <code>consultorios odontológicos Medellín</code> &nbsp;/&nbsp; <code>constructoras Cali</code><br><br>
+          Aparecerán decenas de negocios en el mapa. Haz zoom en una zona específica y repite la búsqueda para ver resultados locales diferentes.
+        </div>
+        <div class="step-tip">💡 Cambia la zona haciendo zoom en barrios distintos. Cada zoom te muestra nuevos negocios que no aparecían antes.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Identifica los que NO tienen web — son tus mejores prospectos</div>
+        <div class="step-body">
+          Al hacer clic en cada resultado, el panel lateral muestra la información del negocio. Busca estos 3 indicadores:<br><br>
+          ✅ <strong>Sin URL</strong> — solo aparece teléfono y dirección. Prospecto caliente.<br>
+          ✅ <strong>URL que redirige a Facebook</strong> — no tienen web real.<br>
+          ✅ <strong>Web con aspecto de 2010–2015</strong> — abre el enlace y revisa: ¿se ve bien en móvil? ¿tiene SSL (https)? ¿está actualizada?
+        </div>
+        <div class="step-tip">💡 Si la web abre con advertencia de "sitio no seguro" (sin https) → prospecto inmediato. Ese negocio está perdiendo clientes hoy.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Extrae el teléfono y nombre del negocio</div>
+        <div class="step-body">
+          Copia en tu base de datos (la herramienta que te construí antes):<br><br>
+          • <strong>Nombre del negocio</strong><br>
+          • <strong>Teléfono</strong> (casi siempre está visible)<br>
+          • <strong>Dirección</strong> (para ubicar la ciudad)<br>
+          • <strong>URL actual</strong> (si tiene, para hacer el diagnóstico)<br>
+          • <strong>Número de reseñas</strong> — muchas reseñas = negocio activo = tiene presupuesto
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Busca el email con esta técnica de 30 segundos</div>
+        <div class="step-body">
+          Si el negocio no muestra email en Maps, busca en Google:<br><br>
+          <code>"nombre del negocio" + "email" OR "contacto" OR "@"</code><br><br>
+          O visita su fanpage de Facebook → sección "Información" → casi siempre tiene email.<br><br>
+          Si nada funciona: usa el <strong>teléfono para un primer contacto por WhatsApp</strong> (ver sección 5).
+        </div>
+        <div class="step-tip">💡 El 60% de los negocios en Google Maps tiene su email en la fanpage de Facebook aunque no esté en Maps.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <div class="step-title">Meta realista: 25 prospectos por hora de búsqueda</div>
+        <div class="step-body">
+          Con este método puedes construir una lista de <strong>50–100 prospectos calificados en 2–4 horas</strong>. No necesitas herramientas de pago para empezar.<br><br>
+          Divide el trabajo: tú haces el diagnóstico de la web (toma 2 minutos por empresa), tu community manager llena la base de datos en paralelo.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECCIÓN 3 -->
+<div class="section" id="s3">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <div class="section-meta">
+      <div class="section-eyebrow">Fuente oficial y gratuita</div>
+      <h2 class="section-title">datos.gov.co — La base de datos que casi nadie usa</h2>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <strong>datos.gov.co</strong> es el portal de datos abiertos del Gobierno colombiano. Contiene registros de Cámara de Comercio con nombre, NIT, email, teléfono y dirección de miles de empresas. Es gratuito, legal, y actualizado.
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Entra a datos.gov.co</div>
+        <div class="step-body">
+          Ve directamente a: <code>datos.gov.co</code><br><br>
+          En el buscador escribe el sector que te interesa: <code>constructoras</code>, <code>restaurantes</code>, <code>talleres</code>, <code>consultorios</code>, etc.
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Filtra por departamento o ciudad</div>
+        <div class="step-body">
+          Los datasets más útiles vienen de las <strong>Cámaras de Comercio regionales</strong>. Busca datasets con nombres como:<br><br>
+          • <em>"Empresas registradas Cámara de Comercio de Bogotá"</em><br>
+          • <em>"Constructoras registradas"</em><br>
+          • <em>"Establecimientos comerciales [ciudad]"</em><br><br>
+          Muchos incluyen columnas de <strong>email y teléfono</strong> directamente.
+        </div>
+        <div class="step-tip">💡 URL directa encontrada: datos.gov.co/Comercio-Industria-y-Turismo/CONSTRUCTORAS-REGISTRADAS/eaue-5ahg — tiene teléfono y correo de constructoras registradas en Cámara de Comercio.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Descarga el CSV o Excel</div>
+        <div class="step-body">
+          Cada dataset tiene botón de exportación: <strong>CSV, JSON o Excel</strong>. Descarga el CSV, ábrelo en Google Sheets y filtra por:<br><br>
+          • Ciudad o departamento<br>
+          • Empresas con email registrado<br>
+          • Fecha de registro (las recientes son más activas)<br><br>
+          Luego verifica manualmente cuáles tienen web y cuáles no — ese es tu filtro final.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-grid" style="margin-top:32px">
+    <div class="card">
+      <span class="card-icon">🔍</span>
+      <div class="card-title">Búsqueda adicional: LinkedIn</div>
+      <div class="card-body">Busca <strong>"empresa" + ciudad + sector</strong> en LinkedIn. Filtra por "Empresa" y revisa su perfil: si no tiene web vinculada o tiene solo una página básica, es prospecto. Puedes escribirle directo por InMail o mensaje.</div>
+    </div>
+    <div class="card">
+      <span class="card-icon">📋</span>
+      <div class="card-title">Páginas Amarillas Colombia</div>
+      <div class="card-body">paginasamarillas.com.co tiene <strong>+1.300 constructoras en Bogotá</strong> y miles de negocios en todos los sectores. Muchos listados son solo teléfono y dirección — sin web. Filtra por sector, revisa uno a uno, 10 minutos = 15 prospectos.</div>
+    </div>
+    <div class="card">
+      <span class="card-icon">💡</span>
+      <div class="card-title">LeadCanvas (versión paga)</div>
+      <div class="card-body">Si en algún momento quieres escalar, <strong>leadcanvas.app</strong> extrae automáticamente leads de Google Maps con email y teléfono. Funciona en todas las ciudades de Colombia y detecta negocios sin web. Tiene plan de pago mensual.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECCIÓN 4 -->
+<div class="section" id="s4">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <div class="section-meta">
+      <div class="section-eyebrow">Neuromarketing aplicado — Cialdini + Aversión a pérdida</div>
+      <h2 class="section-title">3 emails de prospección listos para copiar y enviar</h2>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    Cada email tiene un gatillo dominante diferente. <strong>No mandes el mismo a todos.</strong> Elige según lo que sabes del prospecto: Email 1 para quienes no tienen web, Email 2 para quienes tienen web vieja, Email 3 para seguimiento si no responden.
+  </div>
+
+  <!-- EMAIL 1 -->
+  <div class="email-block">
+    <div class="email-header">
+      <div class="email-label">Email 1 — Sin página web</div>
+      <div class="email-tags">
+        <span class="etag">Aversión a pérdida</span>
+        <span class="etag">Autoridad</span>
+        <span class="etag">Reciprocidad</span>
+      </div>
+    </div>
+    <div class="email-meta">
+      <div class="email-field">
+        <div class="email-field-label">Para</div>
+        <div class="email-field-val">[email del prospecto]</div>
+      </div>
+      <div class="email-field">
+        <div class="email-field-label">Asunto</div>
+        <div class="email-field-val asunto">Vi que [Nombre Empresa] no tiene página web — le está costando clientes</div>
+      </div>
+    </div>
+    <div class="email-body">Hola [Nombre del decisor],
+
+Mi nombre es Jhony Peña, soy director creativo de <span class="resaltar">Gato Rojo Publicidad</span>, una agencia digital en Bogotá.
+
+Estaba buscando [sector: talleres mecánicos / constructoras / consultorios] en [ciudad] y noté que <span class="resaltar">[Nombre Empresa] no aparece con página web</span> en Google. Solo su número de teléfono.
+
+Eso significa que cada vez que alguien en [ciudad] busca en Google "[servicio que ofrecen]", <span class="resaltar">su negocio no aparece</span>. Sus competidores que sí tienen web están recibiendo esos clientes hoy.
+
+Le hice un diagnóstico rápido de visibilidad digital de su empresa — <span class="trig">sin costo, sin compromiso</span>. Si le interesa verlo, me responde este correo y se lo envío en menos de 24 horas.
+
+En Gato Rojo diseñamos páginas web profesionales que aparecen en Google desde el primer mes, con inversión mucho más accesible de lo que imagina.
+
+¿Le parece si conversamos 15 minutos esta semana?
+
+Quedo atento,
+
+<span class="resaltar">Jhony Peña Cumaco</span>
+Director Creativo — Gato Rojo Publicidad
+📞 [su teléfono]
+🌐 gatorojopublicidad.com.co
+📧 dcreativo@gatorojopublicidad.com.co</div>
+    <div class="email-annotation">
+      <div class="ann-item"><div class="ann-dot" style="background:#ff5a60"></div> Aversión a pérdida: "sus competidores reciben esos clientes hoy"</div>
+      <div class="ann-item"><div class="ann-dot" style="background:#7cb0ff"></div> Reciprocidad: ofrece diagnóstico gratis antes de vender</div>
+      <div class="ann-item"><div class="ann-dot" style="background:#ffb020"></div> Autoridad: nombre completo + cargo + web propia</div>
+      <div class="ann-item"><div class="ann-dot" style="background:#4adba0"></div> CTA mínimo: solo 15 minutos, no "compre ya"</div>
+    </div>
+  </div>
+
+  <!-- EMAIL 2 -->
+  <div class="email-block">
+    <div class="email-header">
+      <div class="email-label">Email 2 — Web desactualizada / sin móvil / sin SSL</div>
+      <div class="email-tags">
+        <span class="etag">Framing</span>
+        <span class="etag">Prueba social</span>
+        <span class="etag">Urgencia real</span>
+      </div>
+    </div>
+    <div class="email-meta">
+      <div class="email-field">
+        <div class="email-field-label">Para</div>
+        <div class="email-field-val">[email del prospecto]</div>
+      </div>
+      <div class="email-field">
+        <div class="email-field-label">Asunto</div>
+        <div class="email-field-val asunto">Su web de [Nombre Empresa] está perdiendo el 60% de los visitantes desde el celular</div>
+      </div>
+    </div>
+    <div class="email-body">Hola [Nombre],
+
+Le escribo desde <span class="resaltar">Gato Rojo Publicidad</span>. Revisé la página web de [Nombre Empresa] y encontré algo que probablemente no sabe:
+
+<span class="resaltar">Su sitio no está optimizado para celular.</span>
+
+Hoy, más del 65% de las búsquedas en Colombia se hacen desde un smartphone. Cuando alguien abre su web en el celular y no carga bien o se ve desordenada, <span class="trig">se va en menos de 8 segundos</span> — y Google lo penaliza bajando su posición en los resultados.
+
+No es un problema de contenido. Es un problema técnico que tiene solución en semanas.
+
+En Gato Rojo hemos ayudado a [INSERTAR # de clientes o sector similar] a modernizar su presencia digital con resultados visibles en Google en el primer mes.
+
+Si quiere, en 10 minutos le muestro exactamente qué tiene su web hoy y cómo quedaría después. Sin tecnicismos.
+
+¿Tiene espacio esta semana para una llamada rápida?
+
+<span class="resaltar">Jhony Peña Cumaco</span>
+Director Creativo — Gato Rojo Publicidad
+📞 [su teléfono]
+🌐 gatorojopublicidad.com.co</div>
+    <div class="email-annotation">
+      <div class="ann-item"><div class="ann-dot" style="background:#ff5a60"></div> Framing: traduce problema técnico a pérdida de clientes concreta</div>
+      <div class="ann-item"><div class="ann-dot" style="background:#7cb0ff"></div> Autoridad numérica: "65%", "8 segundos" — datos reales y creíbles</div>
+      <div class="ann-item"><div class="ann-dot" style="background:#ffb020"></div> Prueba social: "[INSERTAR # clientes]" — reemplazar con dato real</div>
+      <div class="ann-item"><div class="ann-dot" style="background:#4adba0"></div> Sin jerga: "sin tecnicismos" elimina la barrera de miedo al tema</div>
+    </div>
+  </div>
+
+  <!-- EMAIL 3 -->
+  <div class="email-block">
+    <div class="email-header">
+      <div class="email-label">Email 3 — Seguimiento (no respondió al 1 o 2)</div>
+      <div class="email-tags">
+        <span class="etag">Escasez real</span>
+        <span class="etag">Sesgo de presente</span>
+        <span class="etag">Brevedad extrema</span>
+      </div>
+    </div>
+    <div class="email-meta">
+      <div class="email-field">
+        <div class="email-field-label">Para</div>
+        <div class="email-field-val">[email del prospecto]</div>
+      </div>
+      <div class="email-field">
+        <div class="email-field-label">Asunto</div>
+        <div class="email-field-val asunto">¿Le llegó mi mensaje anterior, [Nombre]?</div>
+      </div>
+    </div>
+    <div class="email-body">Hola [Nombre],
+
+Le escribí hace unos días sobre la visibilidad web de [Nombre Empresa]. No sé si le llegó.
+
+En resumen: <span class="resaltar">encontré 3 puntos concretos que están limitando que nuevos clientes lo encuentren en Google.</span>
+
+Tengo el diagnóstico listo para enviarle. Solo necesito 10 minutos de su tiempo esta semana para explicárselo.
+
+¿Le funciona el martes o el jueves?
+
+<span class="resaltar">Jhony — Gato Rojo Publicidad</span>
+📞 [su teléfono]</div>
+    <div class="email-annotation">
+      <div class="ann-item"><div class="ann-dot" style="background:#ff5a60"></div> Brevedad: email corto = más probabilidad de lectura completa</div>
+      <div class="ann-item"><div class="ann-dot" style="background:#7cb0ff"></div> Sesgo de presente: ofrece días concretos — elimina fricción de decisión</div>
+      <div class="ann-item"><div class="ann-dot" style="background:#ffb020"></div> Escasez implícita: "diagnóstico listo" — insinúa que se puede perder</div>
+      <div class="ann-item"><div class="ann-dot" style="background:#4adba0"></div> Curiosidad: "3 puntos concretos" sin revelar cuáles = apertura garantizada</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECCIÓN 5 -->
+<div class="section" id="s5">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <div class="section-meta">
+      <div class="section-eyebrow">Canal más directo en Colombia</div>
+      <h2 class="section-title">Script de WhatsApp — Para cuando solo tienes el teléfono</h2>
+    </div>
+  </div>
+
+  <p style="font-size:13px;color:#999;margin-bottom:24px;line-height:1.7">En Colombia, WhatsApp tiene una tasa de apertura del 90%+. Si no consigues email, este es tu canal. El truco: <strong style="color:#fff">no vendas en el primer mensaje</strong>. Abre conversación con una pregunta o dato de valor.</p>
+
+  <div style="max-width:520px">
+    <p style="font-size:11px;color:#555;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px">Primer mensaje — Apertura</p>
+    <div class="wa-bubble">Hola [Nombre], buenos días. Le escribo de Gato Rojo Publicidad. Vi el negocio de [Nombre Empresa] en Google Maps y tengo un diagnóstico rápido de su presencia web que podría interesarle. ¿Le puedo comentar en un momento?</div>
+
+    <p style="font-size:11px;color:#555;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;margin-top:24px">Si responde "sí" o "¿de qué se trata?"</p>
+    <div class="wa-bubble">Encontré que [su web no aparece en Google / su web no abre bien en celular / no tiene página web]. Eso hace que clientes que lo buscan en internet no lo encuentren.
+
+En Gato Rojo lo resolvemos. ¿Tiene 10 minutos esta semana para una llamada rápida? Le muestro exactamente cómo quedaría.</div>
+
+    <p style="font-size:11px;color:#555;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;margin-top:24px">Si no responde en 3 días — Seguimiento</p>
+    <div class="wa-bubble">Hola [Nombre], quedé pendiente de enviarle el diagnóstico de [Nombre Empresa]. ¿Sigue interesado o prefiere lo contacte en otro momento?</div>
+  </div>
+
+  <div class="highlight-box" style="margin-top:32px">
+    <strong>Regla de oro:</strong> Máximo 3 contactos por prospecto (1er mensaje + 1 seguimiento + 1 cierre). Si en el 3er contacto no hay respuesta, se archiva. No insistas — protege la reputación de Gato Rojo.
+  </div>
+</div>
+
+<!-- SECCIÓN 6 -->
+<div class="section" id="s6">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <div class="section-meta">
+      <div class="section-eyebrow">Rutina de prospección</div>
+      <h2 class="section-title">Checklist diario — 45 minutos que generan pipeline constante</h2>
+    </div>
+  </div>
+
+  <div class="card-grid" style="margin-bottom:32px">
+    <div class="card">
+      <span class="card-icon">📅</span>
+      <div class="card-title">Lunes — Búsqueda</div>
+      <div class="card-body">30 min en Google Maps buscando 1 sector específico. Meta: <strong>15 nuevos prospectos</strong> en la base de datos con teléfono y estado web anotado.</div>
+    </div>
+    <div class="card">
+      <span class="card-icon">✉️</span>
+      <div class="card-title">Martes — Envío</div>
+      <div class="card-body">Enviar emails a los 15 prospectos del lunes. <strong>Personalizar el asunto</strong> con el nombre de la empresa. 2 minutos por email = 30 minutos total.</div>
+    </div>
+    <div class="card">
+      <span class="card-icon">📲</span>
+      <div class="card-title">Jueves — WhatsApp</div>
+      <div class="card-body">Para los que no tienen email, enviar mensaje de WhatsApp. Para los que no respondieron el martes, <strong>enviar seguimiento</strong> (Email 3).</div>
+    </div>
+    <div class="card">
+      <span class="card-icon">📊</span>
+      <div class="card-title">Viernes — Revisión</div>
+      <div class="card-body">Actualizar base de datos: ¿quién respondió? ¿quién agendó llamada? ¿quién descartado? <strong>15 min</strong> para tener el pipeline limpio.</div>
+    </div>
+  </div>
+
+  <div class="checklist">
+    <div class="check-item">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>Meta semanal:</strong> 15 prospectos nuevos + 10 emails enviados + 5 WhatsApps</div>
+    </div>
+    <div class="check-item">
+      <div class="check-box"></div>
+      <div class="check-text"><strong>Meta mensual:</strong> 60 prospectos en base de datos, 3–5 llamadas agendadas, 1–2 propuestas enviadas</div>
+    </div>
+    <div class="check-item">
+      <div class="check-box"></div>
+      <div class="check-text">Personalizar SIEMPRE el asunto del email con el nombre de la empresa — aumenta apertura 40%+</div>
+    </div>
+    <div class="check-item">
+      <div class="check-box"></div>
+      <div class="check-text">Nunca enviar desde Gmail personal — usar <strong>dcreativo@gatorojopublicidad.com.co</strong> para dar seriedad</div>
+    </div>
+    <div class="check-item">
+      <div class="check-box"></div>
+      <div class="check-text">Si el prospecto tiene redes sociales activas, <strong>darle like o comentar un post</strong> antes de escribirle — rompe el frío (gatillo de Simpatía)</div>
+    </div>
+    <div class="check-item">
+      <div class="check-box"></div>
+      <div class="check-text">Adjuntar al email el <strong>diagnóstico rápido</strong> prometido: 1 pantalla con la web actual vs. cómo podría verse. Tarda 10 min en hacerlo y cierra más que cualquier texto.</div>
+    </div>
+    <div class="check-item">
+      <div class="check-box"></div>
+      <div class="check-text">Registrar tasa de apertura: si el asunto no abre bien, cambiarlo después de 10 envíos sin resultado</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand"><span>GATO ROJO</span> PUBLICIDAD — Kit de Prospección Web</div>
+  <div class="footer-note">dcreativo@gatorojopublicidad.com.co · gatorojopublicidad.com.co</div>
+</footer>
+
+</body>
+</html>
