@@ -829,6 +829,27 @@
       main { padding: 24px 16px 60px; }
       .seccion-titulo { font-size: 20px; }
     }
+
+    /* ── LEADS / CRM ── */
+    .leads-kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:20px; }
+    .kpi { background:var(--blanco); border-radius:var(--radio); padding:16px; box-shadow:var(--sombra); }
+    .kpi b { display:block; font-size:24px; font-weight:900; color:var(--rojo); }
+    .kpi small { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--gris-texto); }
+    .leads-barra { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; align-items:center; }
+    .leads-barra select, .leads-barra input { border:1.5px solid var(--gris-borde); border-radius:8px; padding:8px 12px; font-family:inherit; font-size:13px; background:#fff; }
+    .leads-estado-msg { font-size:11px; color:var(--gris-texto); margin-left:auto; }
+    .leads-tabla-wrap { background:var(--blanco); border-radius:var(--radio); box-shadow:var(--sombra); overflow-x:auto; }
+    .leads-tabla { width:100%; border-collapse:collapse; font-size:13px; }
+    .leads-tabla th { text-align:left; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--gris-texto); padding:12px 14px; border-bottom:1.5px solid var(--gris-borde); white-space:nowrap; }
+    .leads-tabla td { padding:12px 14px; border-bottom:1px solid var(--gris-fondo); vertical-align:top; }
+    .leads-tabla tr:hover td { background:#fafafa; cursor:pointer; }
+    .badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; color:#fff; }
+    .b-nuevo{background:#CC1010}.b-contactado{background:#E08A00}.b-cotizado{background:#2D6CDF}.b-cerrado{background:#1E9E5A}.b-perdido{background:#888}
+    .plat { font-size:11px; font-weight:700; }
+    .plat-meta{color:#1877F2}.plat-google{color:#EA4335}.plat-manual{color:var(--gris-texto)}
+    .leads-vacio { padding:40px; text-align:center; color:var(--gris-texto); }
+    .camp-tabla { margin-top:20px; }
+    .camp-tabla h3 { font-size:14px; font-weight:700; margin:20px 0 10px; }
   </style>
 </head>
 <body>
@@ -852,6 +873,10 @@
     <button onclick="mostrarSeccion('recordatorios', this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
       <span>Recordatorios</span>
+    </button>
+    <button onclick="mostrarSeccion('leads', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span>Leads</span>
     </button>
   </nav>
 </header>
@@ -928,6 +953,32 @@
       </button>
     </div>
     <div class="recordatorios-lista" id="recordatorios-lista"></div>
+  </section>
+
+  <!-- ══ LEADS (CRM) ══ -->
+  <section id="leads" class="seccion">
+    <div class="seccion-header">
+      <h2 class="seccion-titulo">Leads <span>Servymaq</span></h2>
+      <div style="display:flex;gap:8px">
+        <button class="btn-secundario" onclick="abrirConfigCrm()">⚙ Conexión</button>
+        <button class="btn-primary" onclick="abrirModalLead()">+ Lead manual</button>
+      </div>
+    </div>
+    <div class="leads-kpis" id="leads-kpis"></div>
+    <div class="leads-barra">
+      <select id="f-estado" onchange="renderLeads()"><option value="">Todos los estados</option><option>nuevo</option><option>contactado</option><option>cotizado</option><option>cerrado</option><option>perdido</option></select>
+      <select id="f-plat" onchange="renderLeads()"><option value="">Meta + Google</option><option value="meta">Meta</option><option value="google">Google</option><option value="manual">Manual</option></select>
+      <input type="search" id="f-q" placeholder="Buscar nombre, teléfono, campaña..." oninput="renderLeads()" />
+      <button class="btn-secundario" onclick="exportarLeadsCSV()">Exportar CSV</button>
+      <span class="leads-estado-msg" id="leads-msg"></span>
+    </div>
+    <div class="leads-tabla-wrap"><table class="leads-tabla"><thead><tr>
+      <th>Fecha</th><th>Lead</th><th>Origen</th><th>Campaña</th><th>Estado</th><th>Valor</th></tr></thead>
+      <tbody id="leads-body"></tbody></table><div class="leads-vacio" id="leads-vacio" style="display:none">Aún no hay leads.</div></div>
+    <div class="camp-tabla"><h3>Rendimiento por campaña</h3>
+      <div class="leads-tabla-wrap"><table class="leads-tabla"><thead><tr>
+        <th>Campaña</th><th>Origen</th><th>Leads</th><th>Contactados</th><th>Cerrados</th><th>% cierre</th><th>Ventas</th></tr></thead>
+        <tbody id="camp-body"></tbody></table></div></div>
   </section>
 
 </main>
@@ -1050,6 +1101,45 @@
   </div>
 </div>
 
+<!-- MODAL LEAD -->
+<div class="overlay" id="overlay-lead" onclick="cerrarModalLead(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3 id="lead-modal-titulo">Nuevo <span>Lead</span></h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="form-group"><label>Nombre</label><input id="lead-nombre" /></div>
+      <div class="form-group"><label>Teléfono</label><input id="lead-telefono" /></div>
+      <div class="form-group"><label>Correo</label><input id="lead-email" /></div>
+      <div class="form-group"><label>Origen</label><select id="lead-plataforma"><option value="manual">Manual</option><option value="meta">Meta</option><option value="google">Google</option></select></div>
+      <div class="form-group"><label>Campaña</label><input id="lead-campana" /></div>
+      <div class="form-group"><label>Estado</label><select id="lead-estado"><option>nuevo</option><option>contactado</option><option>cotizado</option><option>cerrado</option><option>perdido</option></select></div>
+    </div>
+    <div class="form-group"><label>Valor de la venta (COP)</label><input type="number" id="lead-valor" min="0" /></div>
+    <div class="form-group"><label>Notas</label><textarea id="lead-notas" style="min-height:70px"></textarea></div>
+    <div class="modal-acciones">
+      <button class="btn-secundario" id="lead-btn-borrar" onclick="borrarLead()" style="margin-right:auto;display:none">Eliminar</button>
+      <button class="btn-secundario" onclick="cerrarModalLead()">Cancelar</button>
+      <button class="btn-primary" onclick="guardarLead()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CONEXIÓN CRM -->
+<div class="overlay" id="overlay-crm" onclick="cerrarConfigCrm(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3>Conexión <span>Supabase</span></h3>
+    <p style="font-size:12px;color:var(--gris-texto);margin-bottom:14px">Sin datos aquí el CRM funciona en modo demo (solo en este navegador). Guía en <code>crm/README.md</code>.</p>
+    <div class="form-group"><label>Project URL</label><input id="crm-url" placeholder="https://xxxx.supabase.co" /></div>
+    <div class="form-group"><label>anon key</label><input id="crm-key" /></div>
+    <div class="form-group"><label>Correo del equipo</label><input id="crm-user" type="email" /></div>
+    <div class="form-group"><label>Contraseña</label><input id="crm-pass" type="password" /></div>
+    <div class="modal-acciones">
+      <button class="btn-secundario" onclick="desconectarCrm()" style="margin-right:auto">Modo demo</button>
+      <button class="btn-secundario" onclick="cerrarConfigCrm()">Cancelar</button>
+      <button class="btn-primary" onclick="conectarCrm()">Conectar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ═══════════════════════════════════════
 // ESTADO GLOBAL
@@ -1107,6 +1197,7 @@ function mostrarSeccion(id, btn) {
   document.getElementById(id).classList.add('activa');
   btn.classList.add('active');
   if (id === 'agenda') renderCalendario();
+  if (id === 'leads') cargarLeads();
 }
 
 // ═══════════════════════════════════════
@@ -1590,6 +1681,178 @@ pedirPermisosNotificacion();
 chequearRecordatoriosHoy();
 chequearAlarmas();
 setInterval(chequearAlarmas, 60000);
+// ═══════════════════════════════════════
+// LEADS / CRM  (Supabase REST o modo demo local)
+// ═══════════════════════════════════════
+const ESTADOS = ['nuevo','contactado','cotizado','cerrado','perdido'];
+let crmCfg = JSON.parse(localStorage.getItem('grp_crm_cfg') || '{}');   // {url,key}
+let crmToken = sessionStorage.getItem('grp_crm_token') || '';
+let leads = [];
+let leadEditandoId = null;
+const crmOnline = () => !!(crmCfg.url && crmCfg.key && crmToken);
+
+async function sb(path, opts = {}) {
+  const r = await fetch(crmCfg.url + '/rest/v1/' + path, {
+    ...opts,
+    headers: { apikey: crmCfg.key, Authorization: 'Bearer ' + crmToken,
+      'Content-Type': 'application/json', Prefer: 'return=representation', ...(opts.headers || {}) }
+  });
+  if (r.status === 401) { crmToken = ''; sessionStorage.removeItem('grp_crm_token'); throw new Error('Sesión expirada, vuelve a conectar'); }
+  if (!r.ok) throw new Error(await r.text());
+  return r.status === 204 ? null : r.json();
+}
+
+function demoLeads() {
+  const d = n => new Date(Date.now() - n * 3600e3).toISOString();
+  return [
+    { id: uuid(), created_at: d(2),  plataforma:'meta',   campana:'Servymaq · Generación de leads', nombre:'Carlos Gómez',  telefono:'3001234567', email:'carlos@ejemplo.com', estado:'nuevo',      valor:0,       notas:'Demo' },
+    { id: uuid(), created_at: d(30), plataforma:'google', campana:'Search · Servicio técnico',     nombre:'Ana Rojas',     telefono:'3109876543', email:'ana@ejemplo.com',    estado:'contactado', valor:0,       notas:'' },
+    { id: uuid(), created_at: d(80), plataforma:'meta',   campana:'Servymaq · Generación de leads', nombre:'Luis Pérez',    telefono:'3205557788', email:'',                   estado:'cerrado',    valor:4500000, notas:'' },
+  ];
+}
+
+async function cargarLeads() {
+  const msg = document.getElementById('leads-msg');
+  if (crmOnline()) {
+    try { leads = await sb('leads?select=*&order=created_at.desc&limit=1000'); msg.textContent = '● Conectado a Supabase'; }
+    catch (e) { msg.textContent = '⚠ ' + e.message; toast('Error CRM: ' + e.message); }
+  } else {
+    leads = JSON.parse(localStorage.getItem('grp_leads_demo') || 'null') || demoLeads();
+    msg.textContent = '○ Modo demo (local)';
+  }
+  renderLeads();
+}
+
+function persistirDemo() { if (!crmOnline()) localStorage.setItem('grp_leads_demo', JSON.stringify(leads)); }
+
+const fmtCOP = n => '$' + Number(n || 0).toLocaleString('es-CO');
+const badge = e => `<span class="badge b-${e}">${e}</span>`;
+
+function leadsFiltrados() {
+  const e = document.getElementById('f-estado').value, p = document.getElementById('f-plat').value;
+  const q = document.getElementById('f-q').value.toLowerCase();
+  return leads.filter(l => (!e || l.estado === e) && (!p || l.plataforma === p) &&
+    (!q || [l.nombre, l.telefono, l.email, l.campana].join(' ').toLowerCase().includes(q)));
+}
+
+function renderLeads() {
+  const lista = leadsFiltrados();
+  const total = leads.length, cont = leads.filter(l => l.estado !== 'nuevo').length;
+  const cerr = leads.filter(l => l.estado === 'cerrado');
+  const ventas = cerr.reduce((a, l) => a + Number(l.valor || 0), 0);
+  const tiempos = leads.filter(l => l.contactado_at).map(l => (new Date(l.contactado_at) - new Date(l.created_at)) / 60000);
+  const tPromedio = tiempos.length ? Math.round(tiempos.reduce((a, b) => a + b, 0) / tiempos.length) : null;
+  document.getElementById('leads-kpis').innerHTML = [
+    [total, 'Leads'], [total ? Math.round(cont / total * 100) + '%' : '—', 'Tasa de contacto'],
+    [total ? Math.round(cerr.length / total * 100) + '%' : '—', 'Tasa de cierre'],
+    [tPromedio === null ? '—' : tPromedio + ' min', 'Tiempo a 1er contacto'], [fmtCOP(ventas), 'Ventas cerradas']
+  ].map(([v, t]) => `<div class="kpi"><b>${v}</b><small>${t}</small></div>`).join('');
+
+  document.getElementById('leads-vacio').style.display = lista.length ? 'none' : 'block';
+  document.getElementById('leads-body').innerHTML = lista.map(l => `
+    <tr onclick="abrirModalLead('${l.id}')">
+      <td>${fechaCorta(l.created_at)}</td>
+      <td><b>${escapeHtml(l.nombre || 'Sin nombre')}</b><br><small>${escapeHtml(l.telefono || '')} ${escapeHtml(l.email || '')}</small></td>
+      <td><span class="plat plat-${l.plataforma}">${l.plataforma}</span></td>
+      <td>${escapeHtml(l.campana || '—')}</td><td>${badge(l.estado)}</td><td>${l.valor ? fmtCOP(l.valor) : '—'}</td>
+    </tr>`).join('');
+
+  const g = {};
+  leads.forEach(l => { const k = (l.campana || 'Sin campaña') + '|' + l.plataforma;
+    (g[k] = g[k] || { c: l.campana || 'Sin campaña', p: l.plataforma, n: 0, co: 0, ce: 0, v: 0 });
+    g[k].n++; if (l.estado !== 'nuevo') g[k].co++; if (l.estado === 'cerrado') { g[k].ce++; g[k].v += Number(l.valor || 0); } });
+  document.getElementById('camp-body').innerHTML = Object.values(g).sort((a, b) => b.n - a.n).map(x => `
+    <tr><td>${escapeHtml(x.c)}</td><td><span class="plat plat-${x.p}">${x.p}</span></td><td>${x.n}</td><td>${x.co}</td><td>${x.ce}</td>
+    <td>${Math.round(x.ce / x.n * 100)}%</td><td>${fmtCOP(x.v)}</td></tr>`).join('');
+}
+
+function abrirModalLead(id = null) {
+  leadEditandoId = id;
+  const l = leads.find(x => x.id === id) || {};
+  document.getElementById('lead-modal-titulo').innerHTML = id ? 'Editar <span>Lead</span>' : 'Nuevo <span>Lead</span>';
+  for (const [k, f] of [['nombre','nombre'],['telefono','telefono'],['email','email'],['campana','campana'],['notas','notas']])
+    document.getElementById('lead-' + k).value = l[f] || '';
+  document.getElementById('lead-plataforma').value = l.plataforma || 'manual';
+  document.getElementById('lead-estado').value = l.estado || 'nuevo';
+  document.getElementById('lead-valor').value = l.valor || '';
+  document.getElementById('lead-btn-borrar').style.display = id ? 'inline-block' : 'none';
+  document.getElementById('overlay-lead').classList.add('visible');
+}
+function cerrarModalLead(e) { if (!e || e.target.id === 'overlay-lead') document.getElementById('overlay-lead').classList.remove('visible'); }
+
+async function guardarLead() {
+  const g = i => document.getElementById('lead-' + i).value.trim();
+  const datos = { nombre: g('nombre'), telefono: g('telefono'), email: g('email'), campana: g('campana'), notas: g('notas'),
+    plataforma: g('plataforma'), estado: g('estado'), valor: Number(g('valor') || 0) };
+  if (!datos.nombre && !datos.telefono) { toast('Pon al menos nombre o teléfono'); return; }
+  const prev = leads.find(x => x.id === leadEditandoId);
+  const ahora = new Date().toISOString();
+  if (prev) {
+    if (prev.estado === 'nuevo' && datos.estado !== 'nuevo' && !prev.contactado_at) datos.contactado_at = ahora;
+    if (datos.estado === 'cerrado' && !prev.cerrado_at) datos.cerrado_at = ahora;
+  } else {
+    if (datos.estado !== 'nuevo') datos.contactado_at = ahora;
+    if (datos.estado === 'cerrado') datos.cerrado_at = ahora;
+  }
+  try {
+    if (crmOnline()) {
+      if (prev) await sb('leads?id=eq.' + prev.id, { method: 'PATCH', body: JSON.stringify(datos) });
+      else await sb('leads', { method: 'POST', body: JSON.stringify({ ...datos, cliente: 'Servymaq' }) });
+      await cargarLeads();
+    } else {
+      if (prev) Object.assign(prev, datos); else leads.unshift({ id: uuid(), created_at: ahora, ...datos });
+      persistirDemo(); renderLeads();
+    }
+    cerrarModalLead(); toast('Lead guardado');
+  } catch (e) { toast('Error: ' + e.message); }
+}
+
+async function borrarLead() {
+  if (!confirm('¿Eliminar este lead?')) return;
+  try {
+    if (crmOnline()) { await sb('leads?id=eq.' + leadEditandoId, { method: 'DELETE' }); await cargarLeads(); }
+    else { leads = leads.filter(x => x.id !== leadEditandoId); persistirDemo(); renderLeads(); }
+    cerrarModalLead();
+  } catch (e) { toast('Error: ' + e.message); }
+}
+
+function exportarLeadsCSV() {
+  const cols = ['created_at','plataforma','campana','nombre','telefono','email','estado','valor','notas'];
+  const csv = [cols.join(',')].concat(leadsFiltrados().map(l => cols.map(c => '"' + String(l[c] ?? '').replace(/"/g, '""') + '"').join(','))).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' }));
+  a.download = 'leads-servymaq.csv'; a.click();
+}
+
+function abrirConfigCrm() {
+  document.getElementById('crm-url').value = crmCfg.url || '';
+  document.getElementById('crm-key').value = crmCfg.key || '';
+  document.getElementById('crm-user').value = crmCfg.user || '';
+  document.getElementById('crm-pass').value = '';
+  document.getElementById('overlay-crm').classList.add('visible');
+}
+function cerrarConfigCrm(e) { if (!e || e.target.id === 'overlay-crm') document.getElementById('overlay-crm').classList.remove('visible'); }
+
+async function conectarCrm() {
+  const url = document.getElementById('crm-url').value.trim().replace(/\/$/, '');
+  const key = document.getElementById('crm-key').value.trim();
+  const user = document.getElementById('crm-user').value.trim();
+  const pass = document.getElementById('crm-pass').value;
+  try {
+    const r = await fetch(url + '/auth/v1/token?grant_type=password', { method: 'POST',
+      headers: { apikey: key, 'Content-Type': 'application/json' }, body: JSON.stringify({ email: user, password: pass }) });
+    if (!r.ok) throw new Error('Credenciales inválidas');
+    crmToken = (await r.json()).access_token;
+    sessionStorage.setItem('grp_crm_token', crmToken);
+    crmCfg = { url, key, user };                       // la contraseña no se guarda
+    localStorage.setItem('grp_crm_cfg', JSON.stringify(crmCfg));
+    cerrarConfigCrm(); await cargarLeads(); toast('Conectado');
+  } catch (e) { toast('No se pudo conectar: ' + e.message); }
+}
+function desconectarCrm() {
+  crmToken = ''; sessionStorage.removeItem('grp_crm_token'); cerrarConfigCrm(); cargarLeads();
+}
+
 </script>
 </body>
 </html>
